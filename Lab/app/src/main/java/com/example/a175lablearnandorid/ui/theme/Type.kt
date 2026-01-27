@@ -1,4 +1,4 @@
-package com.example.a175lablearnandroid.ui.theme
+package com.example.a175lablearnandorid.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

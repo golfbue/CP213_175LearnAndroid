@@ -1,4 +1,4 @@
-package com.example.a175lablearnandroid.ui.theme.ui.theme
+package com.example.a175lablearnandorid.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -34,7 +34,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun _175LabLearnAndroidTheme(
+fun _175LabLearnAndoridTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
