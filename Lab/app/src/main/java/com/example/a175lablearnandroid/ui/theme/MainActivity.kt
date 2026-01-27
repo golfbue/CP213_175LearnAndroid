@@ -1,4 +1,4 @@
-package com.example.a175lablearnandroid
+package com.example.a175lablearnandroid.ui.theme
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.a175lablearnandroid.ui.theme._175LabLearnAndroidTheme
+import com.example.a175lablearnandroid.ui.theme.ui.theme._175LabLearnAndroidTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
