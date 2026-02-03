@@ -66,7 +66,7 @@ class MainActivity2 : ComponentActivity() {
                             .height(400.dp)
                             .padding(20.dp)
                             .clickable {
-                                val intent = Intent(context, MainActivity::class.java)
+                                val intent = Intent(context, com.example.a175lablearnandorid.ListActivity::class.java)
                                 context.startActivity(intent)
                             }
                     )
