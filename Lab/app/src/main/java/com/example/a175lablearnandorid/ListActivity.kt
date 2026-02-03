@@ -79,7 +79,6 @@ fun HololiveItem(item: Hololive) {
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // เลข ID
             Text(
                 text = "#${item.number}",
                 fontWeight = FontWeight.Bold,
@@ -87,7 +86,6 @@ fun HololiveItem(item: Hololive) {
                 modifier = Modifier.width(48.dp)
             )
 
-            // ชื่อ
             Text(
                 text = item.name,
                 modifier = Modifier.weight(1f),
@@ -99,7 +97,6 @@ fun HololiveItem(item: Hololive) {
 }
 
 
-/* ---------- Data ---------- */
 data class Hololive(
     val name: String,
     val number: Int
