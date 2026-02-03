@@ -1,5 +1,7 @@
 package com.example.a175lablearnandorid
 
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.a175lablearnandorid.ui.theme._175LabLearnAndoridTheme
+
 
 class MainActivity2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +47,14 @@ class MainActivity2 : ComponentActivity() {
                     }
 
                     // image
+                    Image(
+                        painter = painterResource(id = R.drawable.kagari),
+                        contentDescription = "kagari",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(400.dp)
+                            .padding(20.dp)
+                    )
                     // status
                 }
             }
