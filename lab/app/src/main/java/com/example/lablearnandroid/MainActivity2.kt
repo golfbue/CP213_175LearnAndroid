@@ -30,12 +30,12 @@ class MainActivity2 : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting2(
-                        name = "Android2",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Greeting2(
+                    name = "Android2",
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
         }
     }
 }

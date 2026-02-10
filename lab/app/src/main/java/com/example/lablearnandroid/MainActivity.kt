@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,16 +56,17 @@ class MainActivity : ComponentActivity() {
                     text = "hp",
                     modifier = Modifier
                         .align(alignment = Alignment.CenterStart)
-                        .fillMaxWidth(fraction = 0.55f)
+                        .fillMaxWidth(fraction = 0.75f)
                         .background(color = Color.Red)
                         .padding(8.dp)
                 )
             }
             // image
             Image(
-                painter = painterResource(R.drawable.ic_profile),
+                painter = painterResource(R.drawable.ayame),
                 contentDescription = "My Image",
                 modifier = Modifier
+                    .size(400.dp)
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 16.dp, bottom = 32.dp)
                     .clickable {
@@ -93,12 +95,28 @@ class MainActivity : ComponentActivity() {
                     })
                 }
                 Column {
+                    Button(onClick = {
+                        agi = agi + 1
+                    }) {
+                        Text(text = "+", fontSize = 32.sp)
+                    }
                     Text(text = "Agi", fontSize = 32.sp)
                     Text(text = agi.toString(), fontSize = 32.sp)
+                    Text(text = "-", fontSize = 32.sp, modifier = Modifier.clickable {
+                        agi = agi - 1
+                    })
                 }
                 Column {
+                    Button(onClick = {
+                        int = int + 1
+                    }) {
+                        Text(text = "+", fontSize = 32.sp)
+                    }
                     Text(text = "Int", fontSize = 32.sp)
                     Text(text = int.toString(), fontSize = 32.sp)
+                    Text(text = "-", fontSize = 32.sp, modifier = Modifier.clickable {
+                        int = int - 1
+                    })
                 }
             }
         }
