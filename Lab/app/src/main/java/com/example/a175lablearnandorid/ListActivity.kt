@@ -86,7 +86,6 @@ fun HololiveItem(item: Hololive) {
                 modifier = Modifier.width(48.dp)
             )
 
-            // ชื่อ
             Text(
                 text = item.name,
                 modifier = Modifier.weight(1f),
