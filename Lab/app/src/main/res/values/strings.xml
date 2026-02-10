@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">175LabLearnAndorid</string>
+    <string name="app_name">LabLearnAndroid</string>
     <string name="title_activity_main2">MainActivity2</string>
-    <string name="title_activity_main3">MainActivity3</string>
-    <string name="title_activity_list">ListActivity</string>
+    <string name="title_activity_list">LIstActivity</string>
 </resources>

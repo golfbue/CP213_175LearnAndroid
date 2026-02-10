@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.a175lablearnandorid"
+    namespace = "com.example.lablearnandroid"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.a175lablearnandorid"
+        applicationId = "com.example.lablearnandroid"
         minSdk = 30
         targetSdk = 36
         versionCode = 1
@@ -56,4 +56,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("io.coil-kt:coil-compose:2.5.0") // Check for the latest version
 }
