@@ -7,4 +7,8 @@
     <string name="title_activity_life_cycle_compose_activity.kt">LifeCycleComposeActivity.kt
     </string>
     <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_shared_preferences_util">SharedPreferencesUtilActivity</string>
+    <string name="title_activity_shared_preferences">SharedPreferencesActivity</string>
+    <string name="title_activity_pokemon_view_model">PokemonViewModel</string>
+    <string name="title_activity_pokemon_models.kt">PokemonModels.kt</string>
 </resources>
