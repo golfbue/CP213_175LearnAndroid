@@ -2,7 +2,6 @@ package com.example.lablearnandroid
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,13 +30,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-class MainActivity : ComponentActivity() {
+import android.util.Log
+
+class RPGCardActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("Lifecycle", "MainActivity : onCreate")
         setContent {
             RPGCardView()
         }
     }
+
     override fun onStart() {
         super.onStart()
         Log.i("Lifecycle", "MainActivity : onStart")
@@ -68,6 +71,7 @@ class MainActivity : ComponentActivity() {
         super.onRestart()
         Log.i("Lifecycle", "MainActivity : onRestart")
     }
+
     @Composable
     fun RPGCardView() {
         Column(
@@ -85,21 +89,20 @@ class MainActivity : ComponentActivity() {
                     text = "hp",
                     modifier = Modifier
                         .align(alignment = Alignment.CenterStart)
-                        .fillMaxWidth(fraction = 0.75f)
+                        .fillMaxWidth(fraction = 0.55f)
                         .background(color = Color.Red)
                         .padding(8.dp)
                 )
             }
             // image
             Image(
-                painter = painterResource(R.drawable.ayame),
+                painter = painterResource(R.drawable.ic_profile),
                 contentDescription = "My Image",
                 modifier = Modifier
-                    .size(400.dp)
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 16.dp, bottom = 32.dp)
                     .clickable {
-                        startActivity(Intent(this@MainActivity, PokedexActivity::class.java))
+                        startActivity(Intent(this@RPGCardActivity, LifeCycleComposeActivity::class.java))
                     }
             )
 
@@ -124,28 +127,12 @@ class MainActivity : ComponentActivity() {
                     })
                 }
                 Column {
-                    Button(onClick = {
-                        agi = agi + 1
-                    }) {
-                        Text(text = "+", fontSize = 32.sp)
-                    }
                     Text(text = "Agi", fontSize = 32.sp)
                     Text(text = agi.toString(), fontSize = 32.sp)
-                    Text(text = "-", fontSize = 32.sp, modifier = Modifier.clickable {
-                        agi = agi - 1
-                    })
                 }
                 Column {
-                    Button(onClick = {
-                        int = int + 1
-                    }) {
-                        Text(text = "+", fontSize = 32.sp)
-                    }
                     Text(text = "Int", fontSize = 32.sp)
                     Text(text = int.toString(), fontSize = 32.sp)
-                    Text(text = "-", fontSize = 32.sp, modifier = Modifier.clickable {
-                        int = int - 1
-                    })
                 }
             }
         }
