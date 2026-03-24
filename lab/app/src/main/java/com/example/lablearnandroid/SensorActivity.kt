@@ -99,7 +99,12 @@ fun SensorScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
-                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                permissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
             }) {
                 Text("ขออนุญาต Location อีกครั้ง")
             }
