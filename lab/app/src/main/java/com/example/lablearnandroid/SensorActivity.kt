@@ -37,46 +37,12 @@ class SensorActivity : ComponentActivity() {
 fun SensorScreen(
     viewModel: SensorViewModel = viewModel() // Step 3: Receive SensorViewModel Instance
 ) {
-    val context = LocalContext.current
-    
     // Step 3: Convert StateFlow to Compose State
     val sensorData by viewModel.sensorData.collectAsState()
 
-    var hasPermission by remember { mutableStateOf(false) }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val fineGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
-        val coarseGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
-        
-        hasPermission = fineGranted || coarseGranted
-        if (hasPermission) {
-            viewModel.startTracking()
-        }
-    }
-
     LaunchedEffect(Unit) {
-        val fineStatus = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-        val coarseStatus = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        
-        if (fineStatus == PackageManager.PERMISSION_GRANTED || coarseStatus == PackageManager.PERMISSION_GRANTED) {
-            hasPermission = true
-            viewModel.startTracking()
-        } else {
-            permissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-        }
+        // Open location tracking immediately without asking for permission
+        viewModel.startTracking()
     }
 
     DisposableEffect(Unit) {
@@ -92,51 +58,33 @@ fun SensorScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (!hasPermission) {
+        Text(
+            text = "GPS Tracking (MVVM Architecture)",
+            style = MaterialTheme.typography.headlineSmall
+        )
+        
+        Spacer(modifier = Modifier.height(32.dp))
+        
+        if (sensorData != null) {
             Text(
-                text = "กำลังรออนุญาตเข้าถึงตำแหน่ง...",
+                text = "Latitude: ${sensorData?.latitude}",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Longitude: ${sensorData?.longitude}",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Accuracy: ${sensorData?.accuracy} meters",
                 style = MaterialTheme.typography.titleMedium
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {
-                permissionLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-                )
-            }) {
-                Text("ขออนุญาต Location อีกครั้ง")
-            }
         } else {
             Text(
-                text = "GPS Tracking (MVVM Architecture)",
-                style = MaterialTheme.typography.headlineSmall
+                text = "กำลังค้นหาพิกัด... (โปรดให้สิทธิ์ Location ใน Settings)",
+                style = MaterialTheme.typography.titleLarge
             )
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
-            if (sensorData != null) {
-                Text(
-                    text = "Latitude: ${sensorData?.latitude}",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Longitude: ${sensorData?.longitude}",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Accuracy: ${sensorData?.accuracy} meters",
-                    style = MaterialTheme.typography.titleMedium
-                )
-            } else {
-                Text(
-                    text = "กำลังค้นหาพิกัด...",
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
         }
     }
 }
