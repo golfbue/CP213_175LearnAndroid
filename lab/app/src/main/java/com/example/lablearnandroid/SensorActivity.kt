@@ -41,6 +41,7 @@ fun SensorScreen(
     val sensorData by viewModel.sensorData.collectAsState()
 
     var hasPermission by remember { mutableStateOf(false) }
+    var isTracking by remember { mutableStateOf(false) }
     
     // Step 2 from Flow 1: Launcher for Permission
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -51,6 +52,7 @@ fun SensorScreen(
         
         hasPermission = fineGranted || coarseGranted
         if (hasPermission) {
+            isTracking = true
             viewModel.startTracking()
         }
     }
@@ -74,33 +76,53 @@ fun SensorScreen(
         )
         Spacer(modifier = Modifier.height(32.dp))
 
-        if (!hasPermission) {
-            // Step 4 from Flow 1: ผูกลอจิกเข้ากับปุ่มกด
-            Button(onClick = {
-                val fineStatus = ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-                val coarseStatus = ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-                
-                if (fineStatus == PackageManager.PERMISSION_GRANTED || coarseStatus == PackageManager.PERMISSION_GRANTED) {
-                    hasPermission = true
-                    viewModel.startTracking()
-                } else {
-                    permissionLauncher.launch(
-                        arrayOf(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                        )
+        // UI สำหรับปุ่ม Start / Stop Location
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Button(
+                onClick = {
+                    val fineStatus = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.ACCESS_FINE_LOCATION
                     )
-                }
-            }) {
-                Text("เริ่มดึงพิกัด GPS (ขออนุญาต)")
+                    val coarseStatus = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                    
+                    if (fineStatus == PackageManager.PERMISSION_GRANTED || coarseStatus == PackageManager.PERMISSION_GRANTED) {
+                        hasPermission = true
+                        isTracking = true
+                        viewModel.startTracking()
+                    } else {
+                        permissionLauncher.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            )
+                        )
+                    }
+                },
+                enabled = !isTracking
+            ) {
+                Text("Start Location")
             }
-        } else {
+
+            Button(
+                onClick = {
+                    isTracking = false
+                    viewModel.stopTracking()
+                },
+                enabled = isTracking
+            ) {
+                Text("Stop Location")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        if (isTracking) {
             if (sensorData != null) {
                 Text(
                     text = "Latitude: ${sensorData?.latitude}",
@@ -122,6 +144,12 @@ fun SensorScreen(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
+        } else {
+            Text(
+                text = "กดปุ่ม Start เพื่อเริ่มดึงพิกัด",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
