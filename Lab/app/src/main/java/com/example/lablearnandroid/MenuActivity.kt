@@ -49,6 +49,12 @@ class MenuActivity : ComponentActivity() {
                 }) {
                     Text("MviCounterActivity")
                 }
+
+                Button(onClick = {
+                    startActivity(Intent(this@MenuActivity, GalleryActivity::class.java))
+                }) {
+                    Text("GalleryActivity")
+                }
             }
         }
     }
