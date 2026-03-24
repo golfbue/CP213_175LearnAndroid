@@ -41,7 +41,8 @@ fun SensorScreen(
     val sensorData by viewModel.sensorData.collectAsState()
 
     var hasPermission by remember { mutableStateOf(false) }
-
+    
+    // Step 2 from Flow 1: Launcher for Permission
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -51,29 +52,6 @@ fun SensorScreen(
         hasPermission = fineGranted || coarseGranted
         if (hasPermission) {
             viewModel.startTracking()
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        val fineStatus = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-        val coarseStatus = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        
-        if (fineStatus == PackageManager.PERMISSION_GRANTED || coarseStatus == PackageManager.PERMISSION_GRANTED) {
-            hasPermission = true
-            viewModel.startTracking()
-        } else {
-            permissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
         }
     }
 
@@ -90,30 +68,39 @@ fun SensorScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Text(
+            text = "GPS Tracking (MVVM Architecture)",
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+
         if (!hasPermission) {
-            Text(
-                text = "กำลังรออนุญาตเข้าถึงตำแหน่ง...",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            // Step 4 from Flow 1: ผูกลอจิกเข้ากับปุ่มกด
             Button(onClick = {
-                permissionLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
+                val fineStatus = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
                 )
+                val coarseStatus = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+                
+                if (fineStatus == PackageManager.PERMISSION_GRANTED || coarseStatus == PackageManager.PERMISSION_GRANTED) {
+                    hasPermission = true
+                    viewModel.startTracking()
+                } else {
+                    permissionLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                    )
+                }
             }) {
-                Text("ขออนุญาต Location อีกครั้ง")
+                Text("เริ่มดึงพิกัด GPS (ขออนุญาต)")
             }
         } else {
-            Text(
-                text = "GPS Tracking (MVVM Architecture)",
-                style = MaterialTheme.typography.headlineSmall
-            )
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
             if (sensorData != null) {
                 Text(
                     text = "Latitude: ${sensorData?.latitude}",
