@@ -42,6 +42,18 @@ fun SensorScreen(
 
     var hasPermission by remember { mutableStateOf(false) }
 
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val fineGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        val coarseGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+        
+        hasPermission = fineGranted || coarseGranted
+        if (hasPermission) {
+            viewModel.startTracking()
+        }
+    }
+
     LaunchedEffect(Unit) {
         val fineStatus = ContextCompat.checkSelfPermission(
             context,
@@ -52,9 +64,16 @@ fun SensorScreen(
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
         
-        hasPermission = fineStatus == PackageManager.PERMISSION_GRANTED || coarseStatus == PackageManager.PERMISSION_GRANTED
-        if (hasPermission) {
+        if (fineStatus == PackageManager.PERMISSION_GRANTED || coarseStatus == PackageManager.PERMISSION_GRANTED) {
+            hasPermission = true
             viewModel.startTracking()
+        } else {
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
     }
 
@@ -73,18 +92,19 @@ fun SensorScreen(
     ) {
         if (!hasPermission) {
             Text(
-                text = "แอปจำเป็นต้องใช้สิทธิ์ Location",
+                text = "กำลังรออนุญาตเข้าถึงตำแหน่ง...",
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
-                val intent = android.content.Intent(
-                    android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    android.net.Uri.fromParts("package", context.packageName, null)
+                permissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
                 )
-                context.startActivity(intent)
             }) {
-                Text("เปิดตั้งค่าสิทธิ์ใน Settings")
+                Text("ขออนุญาต Location อีกครั้ง")
             }
         } else {
             Text(
