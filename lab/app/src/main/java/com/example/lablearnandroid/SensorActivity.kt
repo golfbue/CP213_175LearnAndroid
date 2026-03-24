@@ -35,14 +35,27 @@ class SensorActivity : ComponentActivity() {
 
 @Composable
 fun SensorScreen(
-    viewModel: SensorViewModel = viewModel() // Step 3: Receive SensorViewModel Instance
+    viewModel: SensorViewModel = viewModel()
 ) {
-    // Step 3: Convert StateFlow to Compose State
+    val context = LocalContext.current
     val sensorData by viewModel.sensorData.collectAsState()
 
+    var hasPermission by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
-        // Open location tracking immediately without asking for permission
-        viewModel.startTracking()
+        val fineStatus = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        val coarseStatus = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        
+        hasPermission = fineStatus == PackageManager.PERMISSION_GRANTED || coarseStatus == PackageManager.PERMISSION_GRANTED
+        if (hasPermission) {
+            viewModel.startTracking()
+        }
     }
 
     DisposableEffect(Unit) {
@@ -58,33 +71,50 @@ fun SensorScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "GPS Tracking (MVVM Architecture)",
-            style = MaterialTheme.typography.headlineSmall
-        )
-        
-        Spacer(modifier = Modifier.height(32.dp))
-        
-        if (sensorData != null) {
+        if (!hasPermission) {
             Text(
-                text = "Latitude: ${sensorData?.latitude}",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Longitude: ${sensorData?.longitude}",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Accuracy: ${sensorData?.accuracy} meters",
+                text = "แอปจำเป็นต้องใช้สิทธิ์ Location",
                 style = MaterialTheme.typography.titleMedium
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = {
+                val intent = android.content.Intent(
+                    android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    android.net.Uri.fromParts("package", context.packageName, null)
+                )
+                context.startActivity(intent)
+            }) {
+                Text("เปิดตั้งค่าสิทธิ์ใน Settings")
+            }
         } else {
             Text(
-                text = "กำลังค้นหาพิกัด... (โปรดให้สิทธิ์ Location ใน Settings)",
-                style = MaterialTheme.typography.titleLarge
+                text = "GPS Tracking (MVVM Architecture)",
+                style = MaterialTheme.typography.headlineSmall
             )
+            
+            Spacer(modifier = Modifier.height(32.dp))
+            
+            if (sensorData != null) {
+                Text(
+                    text = "Latitude: ${sensorData?.latitude}",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Longitude: ${sensorData?.longitude}",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Accuracy: ${sensorData?.accuracy} meters",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            } else {
+                Text(
+                    text = "กำลังค้นหาพิกัด...",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
         }
     }
 }
